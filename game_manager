@@ -1,0 +1,20 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+public class gamemanager : MonoBehaviour
+{
+    bool hasGameEnded = false;
+    public void endgame()
+    { if (hasGameEnded == false)
+        {
+            hasGameEnded = true;
+            restart();
+        }
+    }
+    public void restart()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+}
