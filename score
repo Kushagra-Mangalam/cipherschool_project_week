@@ -1,0 +1,42 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class score : MonoBehaviour
+{
+    // Start is called before the first frame update
+
+    public Transform player;
+    public Text scoretext;
+    public Text highscoretext;
+    int currscore;
+    int highscore;
+
+
+
+    
+
+    private void Start()
+    {
+        highscore = PlayerPrefs.GetInt("highscore",0);
+        highscoretext.text=highscore.ToString();
+    }
+
+
+
+    void Update()
+    {
+        currscore = Mathf.FloorToInt(player.position.z);
+        scoretext.text = currscore.ToString();
+
+        if (currscore > highscore)
+        {
+            highscore = currscore;
+            highscoretext.text = highscore.ToString();
+            PlayerPrefs.SetInt("highscore", currscore);
+
+        }
+
+    }
+}
