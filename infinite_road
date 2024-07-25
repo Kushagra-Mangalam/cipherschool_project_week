@@ -1,0 +1,75 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class InfiniteRoad : MonoBehaviour
+{
+    public GameObject roadPrefab; // The road segment prefab
+    public int numberOfSegments = 5; // Number of road segments to start with
+    public float roadLength = 10.0f; // Length of each road segment
+    public GameObject[] objectPrefabs; // Array of object prefabs to spawn
+    public int objectsPerSegment = 3; // Number of objects to spawn per segment
+
+    private List<GameObject> roadSegments;
+    private Transform playerTransform;
+
+    void Start()
+    {
+        playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+        roadSegments = new List<GameObject>();
+
+        // Initialize the road with the specified number of segments
+        for (int i = 0; i < numberOfSegments; i++)
+        {
+            CreateRoadSegment(i * roadLength);
+        }
+    }
+
+    void Update()
+    {
+ 
+        if (playerTransform.position.z > roadSegments[0].transform.position.z + roadLength)
+        {
+       
+            GameObject firstSegment = roadSegments[0];
+            roadSegments.RemoveAt(0);
+            float newZ = roadSegments[roadSegments.Count - 1].transform.position.z + roadLength;
+            firstSegment.transform.position = new Vector3(0, 0, newZ);
+            roadSegments.Add(firstSegment);
+
+
+            SpawnRandomObjects(firstSegment);
+        }
+    }
+
+    void CreateRoadSegment(float zPosition)
+    {
+        GameObject segment = Instantiate(roadPrefab, new Vector3(0, 0, zPosition), Quaternion.identity);
+        roadSegments.Add(segment);
+
+
+        SpawnRandomObjects(segment);
+    }
+
+    void SpawnRandomObjects(GameObject segment)
+    {
+        // Clear existing objects in the segment
+        foreach (Transform child in segment.transform)
+        {
+            Destroy(child.gameObject);
+        }
+
+    
+        for (int i = 0; i < objectsPerSegment; i++)
+        {
+            int prefabIndex = Random.Range(0, objectPrefabs.Length);
+            GameObject obj = Instantiate(objectPrefabs[prefabIndex]);
+
+            float xPos = Random.Range(-4.0f, 4.0f); // Adjust as needed based on road width
+            float zPos = Random.Range(0.0f, roadLength);
+            obj.transform.position = new Vector3(xPos, 0, segment.transform.position.z + zPos);
+
+            obj.transform.parent = segment.transform;
+        }
+    }
+}
