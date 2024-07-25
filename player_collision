@@ -1,0 +1,18 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class player_collision : MonoBehaviour
+{
+   // public gamemanager gm;
+
+    private void OnCollisionEnter(Collision collision)
+    {
+           if(collision.collider.tag == "barrier")
+        {
+            Debug.Log("collided");
+            // gm.endgame();
+            FindAnyObjectByType<gamemanager>().endgame();
+        }
+    }
+}
